@@ -1,5 +1,6 @@
 import { Button, Heading, HStack, SimpleGrid, Text, VStack } from '@chakra-ui/react'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { FiAlertTriangle, FiBriefcase } from 'react-icons/fi'
 import { useListTripsQuery } from 'Services/Api/trips.api'
 import { TripCard } from 'Components/TripCard'
 import { TripCardSkeleton } from 'Components/LoadingSkeleton'
@@ -47,7 +48,7 @@ function Home() {
         </SimpleGrid>
       ) : isError && trips.length === 0 ? (
         <EmptyState
-          icon="⚠️"
+          icon={<FiAlertTriangle size={40} color="var(--chakra-colors-negative-500)" />}
           title="Could not load your trips"
           description="Something went wrong reaching the server."
           actionLabel="Retry"
@@ -55,7 +56,7 @@ function Home() {
         />
       ) : trips.length === 0 ? (
         <EmptyState
-          icon="🧳"
+          icon={<FiBriefcase size={40} color="var(--chakra-colors-primary-400)" />}
           title="No trips yet"
           description="Create a trip to start tracking shared expenses with friends."
           actionLabel="Create your first trip"

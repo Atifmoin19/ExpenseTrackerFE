@@ -1,5 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react'
 import { Box, Button, Heading, Text, VStack } from '@chakra-ui/react'
+import { FiAlertTriangle } from 'react-icons/fi'
 
 interface Props {
   children: ReactNode
@@ -48,7 +49,7 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <Box display="flex" minH="100dvh" alignItems="center" justifyContent="center" p={6} bg="ink.50">
           <VStack spacing={4} maxW="sm" textAlign="center">
-            <Text fontSize="3xl">⚠️</Text>
+            <FiAlertTriangle size={40} color="var(--chakra-colors-negative-500)" aria-hidden="true" />
             <Heading size="md" color="ink.900">
               Something went wrong
             </Heading>

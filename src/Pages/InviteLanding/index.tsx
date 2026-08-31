@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Box, Button, Heading, Spinner, Text, VStack } from '@chakra-ui/react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { format } from 'date-fns'
+import { FiAlertTriangle, FiBriefcase } from 'react-icons/fi'
 import { AuthForm } from 'Components/AuthForm'
 import { useAppSelector } from 'Features/Store/common'
 import { useAcceptInviteMutation, useGetInvitePreviewQuery } from 'Services/Api/invites.api'
@@ -60,7 +61,7 @@ function InviteLanding() {
     return (
       <Box display="flex" minH="100dvh" alignItems="center" justifyContent="center" p={6}>
         <EmptyState
-          icon="🔗"
+          icon={<FiAlertTriangle size={40} color="var(--chakra-colors-negative-500)" />}
           title="This invite link isn't valid"
           description="It may have expired or already reached its use limit. Ask the trip admin for a new link."
           actionLabel="Go to Expense Tracker"
@@ -76,9 +77,7 @@ function InviteLanding() {
     <Box minH="100dvh" display="flex" alignItems="center" justifyContent="center" p={6} bg="ink.50">
       <VStack spacing={6} w="full" maxW="400px" bg="white" p={{ base: 6, sm: 8 }} borderRadius="2xl" boxShadow="cardShadow">
         <VStack spacing={1} textAlign="center">
-          <Text fontSize="2xl" aria-hidden="true">
-            🧳
-          </Text>
+          <FiBriefcase size={32} color="var(--chakra-colors-primary-500)" aria-hidden="true" />
           <Heading size="md" color="ink.900">
             You're invited to {trip.tripName}
           </Heading>

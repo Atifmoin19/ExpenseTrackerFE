@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { FiMail } from 'react-icons/fi'
 import { emailOtpSchema, type EmailOtpFormValues } from 'Features/Schema/auth.schema'
 import { requestOtp, verifyOtp, loginWithGoogle } from 'Services/auth'
 import { useAppDispatch } from 'Features/Store/common'
@@ -110,9 +111,7 @@ export function AuthForm({ onAuthenticated, ctaCopy }: AuthFormProps) {
   if (stage === 'code') {
     return (
       <VStack spacing={4} w="full" py={2}>
-        <Text fontSize="2xl" aria-hidden="true">
-          📬
-        </Text>
+        <FiMail size={32} color="var(--chakra-colors-primary-500)" aria-hidden="true" />
         <VStack spacing={1}>
           <Text fontWeight={700} color="ink.900" textAlign="center">
             Enter the code we sent to

@@ -1,4 +1,5 @@
-import { Avatar, HStack, Tag, TagLabel, Text, Tooltip } from '@chakra-ui/react'
+import { Avatar, Box, HStack, Tag, TagLabel, Text, Tooltip } from '@chakra-ui/react'
+import { FiX } from 'react-icons/fi'
 import { useAssetUrl } from 'Features/Hooks/useAssetUrl'
 
 const AVATAR_PALETTE = ['#0E7C74', '#C24630', '#8A6D3B', '#3B6EA5', '#7B4F9E', '#2E9E58', '#B0568A']
@@ -49,12 +50,13 @@ export function MemberChip({ uid, name, photoUrl, onRemove, removeLabel }: Membe
           {name}
         </TagLabel>
         {onRemove && (
-          <Text
+          <Box
             as="button"
             type="button"
             onClick={onRemove}
             aria-label={removeLabel ?? `Remove ${name}`}
-            fontSize="sm"
+            display="flex"
+            alignItems="center"
             color="ink.500"
             px={2}
             py={1}
@@ -62,8 +64,8 @@ export function MemberChip({ uid, name, photoUrl, onRemove, removeLabel }: Membe
             _hover={{ bg: 'ink.200', color: 'negative.600' }}
             _focusVisible={{ boxShadow: '0 0 0 2px var(--chakra-colors-primary-300)' }}
           >
-            ✕
-          </Text>
+            <FiX size={14} aria-hidden="true" />
+          </Box>
         )}
       </HStack>
     </Tag>

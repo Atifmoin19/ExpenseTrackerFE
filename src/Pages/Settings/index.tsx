@@ -3,6 +3,7 @@ import { Box, Button, Checkbox, Heading, HStack, Radio, RadioGroup, Select, Text
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useOutletContext } from 'react-router-dom'
+import { FiLock } from 'react-icons/fi'
 import type { TripOutletContext } from 'Components/TripLayout'
 import { tripSettingsSchema, type TripSettingsFormValues } from 'Features/Schema/trip.schema'
 import { useUpdateTripSettingsMutation } from 'Services/Api/trips.api'
@@ -48,7 +49,13 @@ function Settings() {
   }
 
   if (!isAdmin) {
-    return <EmptyState icon="🔒" title="Admins only" description="Only trip admins can change these settings." />
+    return (
+      <EmptyState
+        icon={<FiLock size={40} color="var(--chakra-colors-ink-400)" />}
+        title="Admins only"
+        description="Only trip admins can change these settings."
+      />
+    )
   }
 
   return (

@@ -1,5 +1,6 @@
 import { Box, HStack, Skeleton, Text, VStack } from '@chakra-ui/react'
 import { NavLink, Outlet, useParams } from 'react-router-dom'
+import { FiCompass } from 'react-icons/fi'
 import { useGetTripQuery } from 'Services/Api/trips.api'
 import { useListMembersQuery } from 'Services/Api/members.api'
 import { useAppSelector } from 'Features/Store/common'
@@ -44,7 +45,7 @@ export function TripLayout() {
   if (isError || !trip) {
     return (
       <EmptyState
-        icon="🧭"
+        icon={<FiCompass size={40} color="var(--chakra-colors-ink-400)" />}
         title="Trip not found"
         description="This trip may have been removed, or you no longer have access."
       />

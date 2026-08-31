@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Box, Button, HStack, Input, Select, Text, VStack, Wrap, WrapItem } from '@chakra-ui/react'
 import { Link as RouterLink, useNavigate, useOutletContext, useSearchParams } from 'react-router-dom'
 import { format, isToday, isYesterday } from 'date-fns'
+import { FiFileText } from 'react-icons/fi'
 import type { TripOutletContext } from 'Components/TripLayout'
 import { useListExpensesQuery, type ListExpensesParams } from 'Services/Api/expenses.api'
 import { usePendingExpenses } from 'Features/Hooks/usePendingExpenses'
@@ -162,7 +163,7 @@ function ExpenseList() {
         <ListSkeleton />
       ) : allItems.length === 0 ? (
         <EmptyState
-          icon="🧾"
+          icon={<FiFileText size={40} color="var(--chakra-colors-primary-400)" />}
           title="No expenses yet"
           description={hasFilters ? 'Try adjusting your filters.' : 'Add the first expense for this trip.'}
           actionLabel={hasFilters ? undefined : 'Add expense'}

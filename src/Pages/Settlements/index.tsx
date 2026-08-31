@@ -21,6 +21,7 @@ import {
 } from '@chakra-ui/react'
 import { useOutletContext } from 'react-router-dom'
 import { format } from 'date-fns'
+import { FiCheckCircle } from 'react-icons/fi'
 import type { TripOutletContext } from 'Components/TripLayout'
 import {
   useCreateSettlementMutation,
@@ -88,7 +89,11 @@ function Settlements() {
         {isSuggestedLoading ? (
           <CardSkeleton height="140px" />
         ) : suggested.length === 0 ? (
-          <EmptyState icon="🎉" title="All settled up" description="No outstanding balances on this trip." />
+          <EmptyState
+            icon={<FiCheckCircle size={40} color="var(--chakra-colors-positive-500)" />}
+            title="All settled up"
+            description="No outstanding balances on this trip."
+          />
         ) : (
           <VStack align="stretch" spacing={2} bg="white" borderRadius="xl" boxShadow="cardShadow" p={2}>
             {suggested.map((s, i) => {
