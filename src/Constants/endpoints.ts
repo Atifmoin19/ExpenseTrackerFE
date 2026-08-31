@@ -46,3 +46,8 @@ export const UPLOAD_VIEW = (key: string) => `${API}/uploads/${key}/view`
 export const NOTIFICATIONS = `${API}/notifications`
 export const NOTIFICATIONS_REGISTER_DEVICE = `${API}/notifications/register-device`
 export const NOTIFICATION_READ = (id: string) => `${API}/notifications/${id}/read`
+
+// Platform admin analytics (whole-app "super admin" only — see CONTRACT.md)
+export const ADMIN_STATS_SUMMARY = `${API}/admin/stats/summary`
+export const ADMIN_STATS_SIGNUPS = `${API}/admin/stats/signups`
+export const ADMIN_TRIPS = `${API}/admin/trips`

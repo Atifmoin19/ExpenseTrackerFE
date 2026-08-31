@@ -126,6 +126,11 @@ export function AppShell() {
               <MenuItem as={RouterLink} to="/profile">
                 Profile
               </MenuItem>
+              {profile?.isPlatformAdmin && (
+                <MenuItem as={RouterLink} to="/admin">
+                  Platform Admin
+                </MenuItem>
+              )}
               <MenuDivider />
               <MenuItem onClick={handleSignOut} color="negative.600">
                 Sign out

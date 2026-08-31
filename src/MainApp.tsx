@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { Box, Spinner } from '@chakra-ui/react'
-import { PrivateRoutes, PublicOnlyRoutes, RequireProfile } from 'RouteProtection'
+import { PrivateRoutes, PublicOnlyRoutes, RequireProfile, RequirePlatformAdmin } from 'RouteProtection'
 import { AppShell } from 'Components/AppShell'
 import { TripLayout } from 'Components/TripLayout'
 
@@ -18,6 +18,7 @@ const Dashboard = lazy(() => import('Pages/Dashboard'))
 const Settlements = lazy(() => import('Pages/Settlements'))
 const Profile = lazy(() => import('Pages/Profile'))
 const Settings = lazy(() => import('Pages/Settings'))
+const Admin = lazy(() => import('Pages/Admin'))
 
 function LoadingFallback() {
   return (
@@ -48,6 +49,13 @@ export const AppRouter = () => (
             <Route path="/" element={<Home />} />
             <Route path="/trips/new" element={<CreateTrip />} />
             <Route path="/profile" element={<Profile />} />
+
+            {/* Top-level, not trip-scoped — whole-app "super admin" only,
+                separate from any /trips/:tripId nesting. Client-side gate;
+                the backend independently 403s every /admin/* API call. */}
+            <Route element={<RequirePlatformAdmin />}>
+              <Route path="/admin" element={<Admin />} />
+            </Route>
 
             <Route path="/trips/:tripId" element={<TripLayout />}>
               <Route index element={<Navigate to="expenses" replace />} />

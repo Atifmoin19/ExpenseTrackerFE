@@ -30,6 +30,10 @@ export interface User {
   /** private object storage key (see Services/uploads.ts), resolved to a
    *  viewable URL via useAssetUrl before being passed to an <img>/<Avatar> */
   photoUrl?: string
+  /** Whole-app "super admin" flag — a property of the user, completely
+   *  separate from any per-trip `role: 'admin'` on a TripMember. Gates the
+   *  /admin route and its "Platform Admin" nav entry. */
+  isPlatformAdmin?: boolean
   createdAt: string
   updatedAt: string
 }
@@ -199,5 +203,44 @@ export interface TimelineActivity {
   body: string
   actorUid?: string
   actorName?: string
+  createdAt: string
+}
+
+// ── platform admin analytics (/api/v1/admin/*, platform-admin only) ─────────
+export interface AdminCurrencyVolume {
+  currency: string
+  totalAmount: number
+}
+
+export interface AdminStatsSummary {
+  totalUsers: number
+  activeTrips: number
+  archivedTrips: number
+  totalTrips: number
+  totalExpenses: number
+  totalVolumeByCurrency: AdminCurrencyVolume[]
+  activeUsers7d: number
+  activeUsers30d: number
+}
+
+export interface AdminSignupBucket {
+  period: string
+  count: number
+}
+
+export interface AdminSignups {
+  bucket: 'daily' | 'weekly'
+  days: number
+  series: AdminSignupBucket[]
+}
+
+export interface AdminTripSummary {
+  id: string
+  name: string
+  status: TripStatus
+  currency: string
+  memberCount: number
+  expenseCount: number
+  totalVolume: number
   createdAt: string
 }

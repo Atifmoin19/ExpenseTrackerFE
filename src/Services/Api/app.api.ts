@@ -22,6 +22,8 @@ export const appApi = createApi({
     'Settlement',
     'Notification',
     'Me',
+    'AdminStats',
+    'AdminTripList',
   ],
   endpoints: () => ({}),
 })

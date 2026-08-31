@@ -32,3 +32,18 @@ export const RequireProfile = () => {
   if (profile && !profile.displayName) return <Navigate to="/onboarding" replace />
   return <Outlet />
 }
+
+/**
+ * RequirePlatformAdmin
+ * Wrap /admin (nested inside PrivateRoutes + RequireProfile). Redirects
+ * anyone whose profile isn't flagged `isPlatformAdmin` back to "/" — this is
+ * a whole-app "super admin" role (users.is_platform_admin on the backend),
+ * completely separate from any per-trip `role: 'admin'` on a TripMember.
+ * Client-side only: the backend independently 403s every /admin/* API call
+ * regardless of this guard.
+ */
+export const RequirePlatformAdmin = () => {
+  const profile = useAppSelector((state) => state.user.profile)
+  if (!profile?.isPlatformAdmin) return <Navigate to="/" replace />
+  return <Outlet />
+}
