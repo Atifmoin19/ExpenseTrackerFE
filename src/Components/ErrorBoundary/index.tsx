@@ -10,6 +10,18 @@ interface State {
   error: Error | null
 }
 
+// A lazy-loaded route chunk from a previous deploy can 404 once a newer
+// deploy has replaced it with different hashed filenames — the tab was just
+// open across the deploy. Self-heal with one automatic reload instead of
+// showing an error screen; a session flag stops an infinite loop if the
+// failure recurs for a genuine reason (offline, real 404).
+const CHUNK_ERROR_PATTERN = /fetch dynamically imported module|loading chunk|importing a module script failed/i
+export const CHUNK_RELOAD_FLAG = 'expenseTracker:chunkReloadAttempted'
+
+function isChunkLoadError(error: Error): boolean {
+  return CHUNK_ERROR_PATTERN.test(error.message ?? '')
+}
+
 export class ErrorBoundary extends Component<Props, State> {
   state: State = { hasError: false, error: null }
 
@@ -19,6 +31,11 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.error('Unhandled UI error:', error, info)
+
+    if (isChunkLoadError(error) && !sessionStorage.getItem(CHUNK_RELOAD_FLAG)) {
+      sessionStorage.setItem(CHUNK_RELOAD_FLAG, '1')
+      window.location.reload()
+    }
   }
 
   handleReload = () => {

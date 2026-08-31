@@ -39,7 +39,7 @@ function nameFor(uid: string, currentUid: string, memberNameByUid: Record<string
 }
 
 function Settlements() {
-  const { trip, members, currentUid } = useOutletContext<TripOutletContext>()
+  const { trip, members, currentUid, isAdmin } = useOutletContext<TripOutletContext>()
   const toast = useAppToast()
   const { data: suggestedData, isLoading: isSuggestedLoading } = useGetSuggestedSettlementsQuery(trip.id)
   const { data: historyData, isLoading: isHistoryLoading } = useListSettlementsQuery(trip.id)
@@ -91,28 +91,35 @@ function Settlements() {
           <EmptyState icon="🎉" title="All settled up" description="No outstanding balances on this trip." />
         ) : (
           <VStack align="stretch" spacing={2} bg="white" borderRadius="xl" boxShadow="cardShadow" p={2}>
-            {suggested.map((s, i) => (
-              <HStack key={`${s.fromUid}-${s.toUid}-${i}`} justify="space-between" p={2} borderRadius="lg" _hover={{ bg: 'ink.50' }}>
-                <HStack spacing={2}>
-                  <MemberAvatar uid={s.fromUid} name={nameFor(s.fromUid, currentUid, memberNameByUid)} size="sm" />
-                  <Text fontSize="sm" color="ink.400">
-                    →
-                  </Text>
-                  <MemberAvatar uid={s.toUid} name={nameFor(s.toUid, currentUid, memberNameByUid)} size="sm" />
-                  <VStack align="flex-start" spacing={0} pl={1}>
-                    <Text fontSize="sm" fontWeight={600}>
-                      {nameFor(s.fromUid, currentUid, memberNameByUid)} pays {nameFor(s.toUid, currentUid, memberNameByUid)}
+            {suggested.map((s, i) => {
+              // Only the payer, the payee, or a trip admin may record this
+              // settlement — matches the backend's authorization check.
+              const canSettle = isAdmin || s.fromUid === currentUid || s.toUid === currentUid
+              return (
+                <HStack key={`${s.fromUid}-${s.toUid}-${i}`} justify="space-between" p={2} borderRadius="lg" _hover={{ bg: 'ink.50' }}>
+                  <HStack spacing={2}>
+                    <MemberAvatar uid={s.fromUid} name={nameFor(s.fromUid, currentUid, memberNameByUid)} size="sm" />
+                    <Text fontSize="sm" color="ink.400">
+                      →
                     </Text>
-                    <Text fontSize="xs" color="ink.500">
-                      {formatCurrency(s.amount, trip.currency)}
-                    </Text>
-                  </VStack>
+                    <MemberAvatar uid={s.toUid} name={nameFor(s.toUid, currentUid, memberNameByUid)} size="sm" />
+                    <VStack align="flex-start" spacing={0} pl={1}>
+                      <Text fontSize="sm" fontWeight={600}>
+                        {nameFor(s.fromUid, currentUid, memberNameByUid)} pays {nameFor(s.toUid, currentUid, memberNameByUid)}
+                      </Text>
+                      <Text fontSize="xs" color="ink.500">
+                        {formatCurrency(s.amount, trip.currency)}
+                      </Text>
+                    </VStack>
+                  </HStack>
+                  {canSettle && (
+                    <Button size="sm" colorScheme="primary" onClick={() => openSettle(s)}>
+                      Settle
+                    </Button>
+                  )}
                 </HStack>
-                <Button size="sm" colorScheme="primary" onClick={() => openSettle(s)}>
-                  Settle
-                </Button>
-              </HStack>
-            ))}
+              )
+            })}
           </VStack>
         )}
       </VStack>

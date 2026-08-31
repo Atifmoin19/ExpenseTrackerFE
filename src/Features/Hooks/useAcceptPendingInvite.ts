@@ -29,7 +29,7 @@ export function useAcceptPendingInvite() {
       .unwrap()
       .then((result) => {
         toast.success('Welcome!', `You've joined ${result.data?.name ?? 'the trip'}.`)
-        navigate(`/trips/${result.data?.id}/expenses`)
+        navigate('/')
       })
       .catch((err) => toast.error("Couldn't join that trip automatically", err))
     // eslint-disable-next-line react-hooks/exhaustive-deps

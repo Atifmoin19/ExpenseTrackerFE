@@ -89,7 +89,33 @@ export function AppShell() {
         top={0}
         zIndex="sticky"
       >
-        <BrandMark />
+        <HStack spacing={8}>
+          <BrandMark />
+          <HStack as="nav" aria-label="Primary" spacing={1} display={{ base: 'none', md: 'flex' }}>
+            {MOBILE_NAV_ITEMS.map((item) => {
+              const active = item.to === '/' ? location.pathname === '/' : location.pathname.startsWith(item.to)
+              return (
+                <HStack
+                  key={item.to}
+                  as={RouterLink}
+                  to={item.to}
+                  spacing={2}
+                  px={3}
+                  py={2}
+                  borderRadius="md"
+                  color={active ? 'primary.600' : 'ink.500'}
+                  bg={active ? 'primary.50' : 'transparent'}
+                  fontWeight={600}
+                  fontSize="sm"
+                  _hover={{ bg: active ? 'primary.50' : 'ink.50' }}
+                >
+                  <item.icon active={active} />
+                  <Text>{item.label}</Text>
+                </HStack>
+              )
+            })}
+          </HStack>
+        </HStack>
         <HStack spacing={3}>
           <NotificationBell />
           <Menu placement="bottom-end">

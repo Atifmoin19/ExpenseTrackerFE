@@ -71,7 +71,7 @@ function Onboarding() {
         try {
           const accepted = await acceptInvite(code).unwrap()
           toast.success('Welcome!', `You've joined ${accepted.data?.name ?? 'the trip'}.`)
-          navigate(`/trips/${accepted.data?.id}/expenses`, { replace: true })
+          navigate('/', { replace: true })
           return
         } catch (err) {
           toast.error("Couldn't join that trip automatically", err)
