@@ -19,7 +19,6 @@ import {
   TagLabel,
   Text,
   Textarea,
-  useDisclosure,
   VStack,
   Wrap,
   WrapItem,
@@ -30,15 +29,9 @@ import { useNavigate, useOutletContext, useParams } from 'react-router-dom'
 import type { TripOutletContext } from 'Components/TripLayout'
 import { addExpenseSchema, EXPENSE_CATEGORIES, type AddExpenseFormValues } from 'Features/Schema/expense.schema'
 import { resolveSplits, formatCurrency, type DraftSplitLine } from 'Features/Schema/splitUtils'
-import {
-  useCreateExpenseMutation,
-  useDeleteExpenseMutation,
-  useGetExpenseQuery,
-  useUpdateExpenseMutation,
-} from 'Services/Api/expenses.api'
+import { useCreateExpenseMutation, useGetExpenseQuery, useUpdateExpenseMutation } from 'Services/Api/expenses.api'
 import { SplitTypeSelector } from 'Components/SplitTypeSelector'
 import { MemberAvatar } from 'Components/MemberAvatar'
-import { ConfirmDialog } from 'Components/ConfirmDialog'
 import { useAppToast } from 'Features/Hooks/useAppToast'
 import { useUnsavedChangesWarning } from 'Features/Hooks/useUnsavedChangesWarning'
 import { generateLocalId } from 'Services/offlineQueue'
@@ -63,7 +56,6 @@ function AddExpense() {
   )
   const [createExpense] = useCreateExpenseMutation()
   const [updateExpense] = useUpdateExpenseMutation()
-  const [deleteExpense, { isLoading: isDeleting }] = useDeleteExpenseMutation()
 
   const [selectedUids, setSelectedUids] = useState<string[]>(members.map((m) => m.uid))
   const [exactAmounts, setExactAmounts] = useState<Record<string, string>>({})
@@ -255,21 +247,6 @@ function AddExpense() {
     }
   }
 
-  const deleteDisclosure = useDisclosure()
-
-  const handleDelete = async () => {
-    if (!expenseId) return
-    try {
-      await deleteExpense({ tripId: trip.id, expenseId }).unwrap()
-      toast.success('Expense deleted')
-      navigate(`/trips/${trip.id}/expenses`)
-    } catch (err) {
-      toast.error('Could not delete expense', err)
-    } finally {
-      deleteDisclosure.onClose()
-    }
-  }
-
   const canEdit = !isEditMode || isAdmin || existing?.data?.createdBy === currentUid
 
   if (isEditMode && isLoadingExisting) {
@@ -455,11 +432,6 @@ function AddExpense() {
             <Button type="submit" size="lg" colorScheme="primary" flex={1} isLoading={isSubmitting} isDisabled={!canEdit}>
               {isEditMode ? 'Save changes' : 'Add expense'}
             </Button>
-            {isEditMode && canEdit && (
-              <Button size="lg" variant="outline" colorScheme="red" onClick={deleteDisclosure.onOpen}>
-                Delete
-              </Button>
-            )}
           </HStack>
           {!canEdit && (
             <Text fontSize="xs" color="ink.500">
@@ -468,16 +440,6 @@ function AddExpense() {
           )}
         </VStack>
       </Box>
-
-      <ConfirmDialog
-        isOpen={deleteDisclosure.isOpen}
-        onClose={deleteDisclosure.onClose}
-        onConfirm={handleDelete}
-        isLoading={isDeleting}
-        title="Delete this expense?"
-        description="This can't be undone. Everyone's balances on this trip will be recalculated."
-        confirmLabel="Delete expense"
-      />
     </VStack>
   )
 }

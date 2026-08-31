@@ -81,10 +81,12 @@ function Settlements() {
     <VStack align="stretch" spacing={6}>
       <VStack align="stretch" spacing={3}>
         <Text fontWeight={700} color="ink.900">
-          Suggested settlements
+          {isAdmin ? 'Suggested settlements' : 'Your suggested settlements'}
         </Text>
         <Text fontSize="sm" color="ink.500">
-          The fewest transactions needed to settle everyone up.
+          {isAdmin
+            ? 'The fewest transactions needed to settle everyone up.'
+            : 'The fewest transactions needed to settle up what you owe or are owed.'}
         </Text>
         {isSuggestedLoading ? (
           <CardSkeleton height="140px" />
@@ -92,7 +94,7 @@ function Settlements() {
           <EmptyState
             icon={<FiCheckCircle size={40} color="var(--chakra-colors-positive-500)" />}
             title="All settled up"
-            description="No outstanding balances on this trip."
+            description={isAdmin ? 'No outstanding balances on this trip.' : "You don't owe or are owed anything right now."}
           />
         ) : (
           <VStack align="stretch" spacing={2} bg="white" borderRadius="xl" boxShadow="cardShadow" p={2}>
@@ -131,13 +133,13 @@ function Settlements() {
 
       <VStack align="stretch" spacing={3}>
         <Text fontWeight={700} color="ink.900">
-          History
+          {isAdmin ? 'History' : 'Your history'}
         </Text>
         {isHistoryLoading ? (
           <CardSkeleton height="100px" />
         ) : history.length === 0 ? (
           <Text fontSize="sm" color="ink.500">
-            No settlements recorded yet.
+            {isAdmin ? 'No settlements recorded yet.' : "You haven't settled anything on this trip yet."}
           </Text>
         ) : (
           <VStack align="stretch" spacing={0} bg="white" borderRadius="xl" boxShadow="cardShadow" px={3} divider={<Box borderBottomWidth="1px" borderColor="ink.100" />}>

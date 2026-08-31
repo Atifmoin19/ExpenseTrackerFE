@@ -184,7 +184,7 @@ function ExpenseList() {
                     currentUserUid={currentUid}
                     memberNameByUid={memberNameByUid}
                     onClick={() =>
-                      !expense.pendingSync && navigate(`/trips/${trip.id}/expenses/${expense.id}/edit`)
+                      !expense.pendingSync && navigate(`/trips/${trip.id}/expenses/${expense.id}`)
                     }
                   />
                 ))}

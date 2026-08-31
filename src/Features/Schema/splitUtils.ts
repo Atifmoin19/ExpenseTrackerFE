@@ -1,4 +1,4 @@
-import type { ExpenseSplit, SplitType } from 'Features/Schema/types'
+import type { Expense, ExpenseSplit, SplitType } from 'Features/Schema/types'
 
 export interface DraftSplitLine {
   uid: string
@@ -57,4 +57,44 @@ export function formatCurrency(amount: number, currency: string): string {
   } catch {
     return `${currency} ${amount.toFixed(2)}`
   }
+}
+
+export interface YourShareInfo {
+  /** 'positive' = you're owed money on this expense, 'negative' = you owe
+   *  money, 'neutral' = you paid and nobody owes you (e.g. a solo expense),
+   *  'none' = your uid isn't in this expense's splits at all. */
+  tone: 'positive' | 'negative' | 'neutral' | 'none'
+  /** e.g. "You paid ₹1200" or "You owe ₹300" or "Not involved" */
+  primary: string
+  /** e.g. "you're owed ₹900" — only set alongside a 'positive' primary line */
+  secondary?: string
+}
+
+/**
+ * Computes what the *current viewer* specifically paid/owes on one expense,
+ * purely from fields the list/detail endpoints already return — no extra
+ * API call. Shared by ExpenseListItem (list row) and ExpenseDetail (restated
+ * on the read-only screen) so the framing stays identical in both places.
+ */
+export function computeYourShare(
+  expense: Pick<Expense, 'amount' | 'currency' | 'paidBy' | 'splits'>,
+  currentUid: string,
+): YourShareInfo {
+  const yourSplit = expense.splits.find((s) => s.uid === currentUid)
+  const youPaid = expense.paidBy === currentUid
+
+  if (youPaid) {
+    const owedToYou = Math.round((expense.amount - (yourSplit?.amount ?? 0)) * 100) / 100
+    const primary = `You paid ${formatCurrency(expense.amount, expense.currency)}`
+    if (owedToYou > 0.005) {
+      return { tone: 'positive', primary, secondary: `you're owed ${formatCurrency(owedToYou, expense.currency)}` }
+    }
+    return { tone: 'neutral', primary }
+  }
+
+  if (yourSplit) {
+    return { tone: 'negative', primary: `You owe ${formatCurrency(yourSplit.amount, expense.currency)}` }
+  }
+
+  return { tone: 'none', primary: 'Not involved' }
 }

@@ -13,6 +13,7 @@ const Home = lazy(() => import('Pages/Home'))
 const CreateTrip = lazy(() => import('Pages/CreateTrip'))
 const InviteMembers = lazy(() => import('Pages/InviteMembers'))
 const ExpenseList = lazy(() => import('Pages/ExpenseList'))
+const ExpenseDetail = lazy(() => import('Pages/ExpenseDetail'))
 const AddExpense = lazy(() => import('Pages/AddExpense'))
 const Dashboard = lazy(() => import('Pages/Dashboard'))
 const Settlements = lazy(() => import('Pages/Settlements'))
@@ -61,6 +62,7 @@ export const AppRouter = () => (
               <Route index element={<Navigate to="expenses" replace />} />
               <Route path="expenses" element={<ExpenseList />} />
               <Route path="expenses/new" element={<AddExpense />} />
+              <Route path="expenses/:expenseId" element={<ExpenseDetail />} />
               <Route path="expenses/:expenseId/edit" element={<AddExpense />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="settlements" element={<Settlements />} />

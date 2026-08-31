@@ -1,6 +1,6 @@
 import { Badge, HStack, Text, VStack } from '@chakra-ui/react'
 import type { Expense } from 'Features/Schema/types'
-import { formatCurrency } from 'Features/Schema/splitUtils'
+import { computeYourShare, formatCurrency } from 'Features/Schema/splitUtils'
 import { CategoryIcon } from 'Components/CategoryIcon'
 
 interface ExpenseListItemProps {
@@ -14,16 +14,7 @@ export function ExpenseListItem({ expense, currentUserUid, memberNameByUid, onCl
   const paidByName =
     expense.paidBy === currentUserUid ? 'You' : memberNameByUid[expense.paidBy] ?? 'Someone'
 
-  const yourSplit = expense.splits.find((s) => s.uid === currentUserUid)
-  const youPaid = expense.paidBy === currentUserUid
-
-  let yourImpact: { label: string; amount: number; positive: boolean } | null = null
-  if (youPaid) {
-    const othersOwe = expense.amount - (yourSplit?.amount ?? 0)
-    yourImpact = othersOwe > 0.005 ? { label: 'you lent', amount: othersOwe, positive: true } : null
-  } else if (yourSplit) {
-    yourImpact = { label: 'you owe', amount: yourSplit.amount, positive: false }
-  }
+  const yourShare = computeYourShare(expense, currentUserUid)
 
   return (
     <HStack
@@ -57,19 +48,25 @@ export function ExpenseListItem({ expense, currentUserUid, memberNameByUid, onCl
           {paidByName} paid {formatCurrency(expense.amount, expense.currency)}
         </Text>
       </VStack>
-      <VStack align="flex-end" spacing={0} flexShrink={0}>
-        {yourImpact ? (
-          <>
-            <Text fontSize="xs" color="ink.500">
-              {yourImpact.label}
-            </Text>
-            <Text fontWeight={700} fontSize="sm" color={yourImpact.positive ? 'positive.700' : 'negative.700'}>
-              {formatCurrency(yourImpact.amount, expense.currency)}
-            </Text>
-          </>
-        ) : (
-          <Text fontSize="xs" color="ink.400">
-            not involved
+      <VStack align="flex-end" spacing={0} flexShrink={0} maxW="150px">
+        <Text
+          fontSize="xs"
+          fontWeight={600}
+          textAlign="right"
+          noOfLines={1}
+          color={
+            yourShare.tone === 'positive'
+              ? 'positive.700'
+              : yourShare.tone === 'negative'
+                ? 'negative.700'
+                : 'ink.400'
+          }
+        >
+          {yourShare.primary}
+        </Text>
+        {yourShare.secondary && (
+          <Text fontSize="xs" color="positive.600" textAlign="right" noOfLines={1}>
+            {yourShare.secondary}
           </Text>
         )}
       </VStack>

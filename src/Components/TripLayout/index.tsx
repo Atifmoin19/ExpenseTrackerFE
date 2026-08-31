@@ -21,16 +21,23 @@ const TABS = [
   { to: 'members', label: 'Members' },
 ]
 
-// Matches /trips/:tripId/expenses/new and /trips/:tripId/expenses/:expenseId/edit —
-// the add/edit expense form gets its own distraction-free screen (just a back
-// link, no tab bar) instead of living inside the "Expenses" tab, which used
-// to make that one tab do two different, confusing jobs (list vs. edit form).
-const EXPENSE_FORM_PATTERN = /\/expenses\/(new|[^/]+\/edit)$/
+// Matches /trips/:tripId/expenses/new, /trips/:tripId/expenses/:expenseId
+// (the read-only detail screen), and /trips/:tripId/expenses/:expenseId/edit
+// — any single-expense view gets its own distraction-free screen (just a
+// back link, no tab bar) instead of living inside the "Expenses" tab. It
+// deliberately does NOT match /trips/:tripId/expenses (the list) itself —
+// that one has no extra segment after "expenses" to match against.
+//
+//   /trips/X/expenses            -> no match (list stays on the tab bar)
+//   /trips/X/expenses/new        -> matches
+//   /trips/X/expenses/abc123     -> matches (detail)
+//   /trips/X/expenses/abc123/edit -> matches
+const EXPENSE_FOCUS_PATTERN = /\/expenses\/[^/]+(\/edit)?$/
 
 export function TripLayout() {
   const { tripId = '' } = useParams<{ tripId: string }>()
   const location = useLocation()
-  const isExpenseForm = EXPENSE_FORM_PATTERN.test(location.pathname)
+  const isExpenseFocused = EXPENSE_FOCUS_PATTERN.test(location.pathname)
   const { data: tripData, isLoading: isTripLoading, isError } = useGetTripQuery(tripId, { skip: !tripId })
   const { data: membersData } = useListMembersQuery(tripId, { skip: !tripId })
   const profile = useAppSelector((state) => state.user.profile)
@@ -73,7 +80,7 @@ export function TripLayout() {
         </Text>
       </VStack>
 
-      {isExpenseForm ? (
+      {isExpenseFocused ? (
         <HStack
           as={RouterLink}
           to={`/trips/${tripId}/expenses`}
