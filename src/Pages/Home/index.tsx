@@ -8,7 +8,14 @@ import { useAppToast } from 'Features/Hooks/useAppToast'
 import { useEffect } from 'react'
 
 function Home() {
-  const { data, isLoading, isError, error } = useListTripsQuery()
+  // A remount within keepUnusedDataFor (60s default) would otherwise serve a
+  // stale cached result without refetching — e.g. the very first mount right
+  // after login/onboarding racing the access token or a just-accepted
+  // invite. Refetch if the cached data is more than 5s old so landing back
+  // on this screen self-heals instead of showing stale data.
+  const { data, isLoading, isError, error, refetch } = useListTripsQuery(undefined, {
+    refetchOnMountOrArgChange: 5,
+  })
   const toast = useAppToast()
   const navigate = useNavigate()
 
@@ -38,6 +45,14 @@ function Home() {
             <TripCardSkeleton key={i} />
           ))}
         </SimpleGrid>
+      ) : isError && trips.length === 0 ? (
+        <EmptyState
+          icon="⚠️"
+          title="Could not load your trips"
+          description="Something went wrong reaching the server."
+          actionLabel="Retry"
+          onAction={() => refetch()}
+        />
       ) : trips.length === 0 ? (
         <EmptyState
           icon="🧳"
