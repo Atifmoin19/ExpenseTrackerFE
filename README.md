@@ -11,7 +11,7 @@ Split group trip expenses with friends, see who owes whom, and settle up in as f
 - Trips with members, invite links (`/invite/:code`), and per-trip admin roles
 - Expenses with four split modes: equal, exact amounts, percentages, shares
 - Receipts uploaded straight to S3-compatible storage through presigned URLs
-- Dashboard: balances, category and timeline charts (recharts)
+- Dashboard: member balances plus spend by category, by member, and over time (recharts)
 - Suggested settlements that minimise the number of payments, plus recorded settlements
 - Email OTP and Google sign-in, with silent JWT refresh
 - Web Push notifications (VAPID) when someone adds an expense, settles up, or joins
