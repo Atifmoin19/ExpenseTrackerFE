@@ -1,4 +1,4 @@
-import { Avatar, Box, HStack, Tag, TagLabel, Text, Tooltip } from '@chakra-ui/react'
+import { Avatar, Box, HStack, Tag, TagLabel, Tooltip } from '@chakra-ui/react'
 import { FiX } from 'react-icons/fi'
 import { useAssetUrl } from 'Features/Hooks/useAssetUrl'
 
