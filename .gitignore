@@ -26,6 +26,7 @@ dev-dist
 *.sw?
 .env
 .env.*
+!.env.example
 
 
 # TypeScript build output (tsc -b)
