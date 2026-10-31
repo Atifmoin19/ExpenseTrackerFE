@@ -8,6 +8,7 @@ import { logout } from 'Services/auth'
 import { useAssetUrl } from 'Features/Hooks/useAssetUrl'
 import { NotificationBell } from 'Components/NotificationBell'
 import { OfflineBanner } from 'Components/OfflineBanner'
+import { DemoBanner } from 'Components/DemoBanner'
 
 function BrandMark() {
   return (
@@ -75,6 +76,7 @@ export function AppShell() {
 
   return (
     <Flex direction="column" minH="100dvh" bg="ink.50">
+      <DemoBanner />
       <OfflineBanner />
       <Flex
         as="header"

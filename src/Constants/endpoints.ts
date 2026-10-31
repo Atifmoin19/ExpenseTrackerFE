@@ -8,6 +8,7 @@ export const AUTH_OTP_VERIFY = `${API}/auth/otp/verify`
 export const AUTH_GOOGLE = `${API}/auth/google`
 export const AUTH_REFRESH = `${API}/auth/refresh`
 export const AUTH_LOGOUT = `${API}/auth/logout`
+export const AUTH_DEMO = `${API}/auth/demo`
 export const AUTH_ME = `${API}/auth/me`
 
 // Trips

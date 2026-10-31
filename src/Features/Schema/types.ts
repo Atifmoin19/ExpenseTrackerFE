@@ -34,6 +34,9 @@ export interface User {
    *  separate from any per-trip `role: 'admin'` on a TripMember. Gates the
    *  /admin route and its "Platform Admin" nav entry. */
   isPlatformAdmin?: boolean
+  /** "Try the demo" sandbox account, purged at demoExpiresAt. */
+  isDemo?: boolean
+  demoExpiresAt?: string | null
   createdAt: string
   updatedAt: string
 }

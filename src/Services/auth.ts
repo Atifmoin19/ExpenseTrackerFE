@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { BASE_URL } from 'Constants'
-import { AUTH_OTP_REQUEST, AUTH_OTP_VERIFY, AUTH_GOOGLE, AUTH_REFRESH, AUTH_LOGOUT } from 'Constants/endpoints'
+import { AUTH_OTP_REQUEST, AUTH_OTP_VERIFY, AUTH_GOOGLE, AUTH_REFRESH, AUTH_LOGOUT, AUTH_DEMO } from 'Constants/endpoints'
 import type { ApiEnvelope, User } from 'Features/Schema/types'
 
 /**
@@ -26,6 +26,8 @@ interface RawUser {
   email: string
   displayName?: string | null
   photoUrl?: string | null
+  isDemo?: boolean
+  demoExpiresAt?: string | null
   createdAt: string
   updatedAt: string
 }
@@ -40,6 +42,8 @@ function normalizeUser(raw: RawUser): User {
     email: raw.email,
     displayName: raw.displayName ?? '',
     photoUrl: raw.photoUrl ?? undefined,
+    isDemo: raw.isDemo ?? false,
+    demoExpiresAt: raw.demoExpiresAt ?? null,
     createdAt: raw.createdAt,
     updatedAt: raw.updatedAt,
   }
@@ -78,6 +82,17 @@ export async function loginWithGoogle(idToken: string): Promise<{ tokens: AuthTo
 }
 
 /** POST /auth/refresh — rotates the refresh token, returns a fresh pair. */
+/** "Try the demo": creates a seeded throwaway sandbox account (backend must
+ *  have DEMO_MODE_ENABLED). Same response shape as the other logins. */
+export async function startDemo(): Promise<{ tokens: AuthTokens; user: User }> {
+  const { data } = await axios.post<ApiEnvelope<AuthResponse>>(`${BASE_URL}${AUTH_DEMO}`)
+  const payload = unwrap(data)
+  return {
+    tokens: { accessToken: payload.accessToken, refreshToken: payload.refreshToken },
+    user: normalizeUser(payload.user),
+  }
+}
+
 export async function refreshTokens(refreshToken: string): Promise<AuthTokens> {
   const { data } = await axios.post<ApiEnvelope<AuthTokens>>(`${BASE_URL}${AUTH_REFRESH}`, { refreshToken })
   return unwrap(data)

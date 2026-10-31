@@ -1,5 +1,6 @@
 import { Box, Heading, Text, VStack } from '@chakra-ui/react'
 import { AuthForm } from 'Components/AuthForm'
+import { DemoButton } from 'Components/DemoButton'
 
 function Logo() {
   return (
@@ -63,6 +64,7 @@ function Login() {
           </VStack>
 
           <AuthForm />
+          <DemoButton />
         </VStack>
       </Box>
     </Box>
