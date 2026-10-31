@@ -1,7 +1,8 @@
 import { appApi } from 'Services/Api/app.api'
 import { TRIP_EXPENSES, TRIP_EXPENSE_DETAIL } from 'Constants/endpoints'
 import type { ApiEnvelope, Expense, ExpenseSplit, SplitType } from 'Features/Schema/types'
-import { generateLocalId, queueExpenseOffline } from 'Services/offlineQueue'
+import { queueExpenseOffline } from 'Services/offlineQueue'
+import { offlineIdHeaders } from 'Services/offlineId'
 
 export interface ListExpensesParams {
   tripId: string
@@ -47,16 +48,18 @@ export const expensesApi = appApi.injectEndpoints({
     }),
     createExpense: builder.mutation<
       ApiEnvelope<Expense>,
-      { tripId: string; body: CreateExpensePayload; optimisticListArgs?: ListExpensesParams[]; localId?: string }
+      // localId is required: it is the idempotency key the backend uses to
+      // collapse the first POST and any offline replays into one expense.
+      // Generate it once per submission with generateLocalId().
+      { tripId: string; body: CreateExpensePayload; optimisticListArgs?: ListExpensesParams[]; localId: string }
     >({
       query: ({ tripId, body, localId }) => ({
         url: TRIP_EXPENSES(tripId),
         method: 'POST',
         body,
-        headers: localId ? { 'X-Offline-Local-Id': localId } : undefined,
+        headers: offlineIdHeaders(localId),
       }),
-      async onQueryStarted({ tripId, body, optimisticListArgs, localId: argLocalId }, { dispatch, queryFulfilled }) {
-        const localId = argLocalId ?? generateLocalId()
+      async onQueryStarted({ tripId, body, optimisticListArgs, localId }, { dispatch, queryFulfilled }) {
         const optimisticExpense: Expense = {
           id: localId,
           tripId,

@@ -5,6 +5,7 @@ import { NetworkFirst, CacheFirst, NetworkOnly } from 'workbox-strategies'
 import { BackgroundSyncPlugin } from 'workbox-background-sync'
 import { ExpirationPlugin } from 'workbox-expiration'
 import type { PrecacheEntry } from 'workbox-precaching'
+import { OFFLINE_LOCAL_ID_HEADER } from './Services/offlineId'
 
 declare const self: ServiceWorkerGlobalScope & {
   __WB_MANIFEST: (PrecacheEntry | string)[]
@@ -53,7 +54,7 @@ const expenseSyncQueue = new BackgroundSyncPlugin('expense-sync-queue', {
     let entry
     while ((entry = await queue.shiftRequest())) {
       const { request } = entry
-      const localId = request.headers.get('X-Offline-Local-Id')
+      const localId = request.headers.get(OFFLINE_LOCAL_ID_HEADER)
       try {
         const response = await fetch(request.clone())
         if (!response.ok && response.status >= 500) throw new Error('Server error, will retry later')
