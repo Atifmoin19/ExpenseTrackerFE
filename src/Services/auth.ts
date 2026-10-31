@@ -21,11 +21,12 @@ export interface AuthTokens {
 // Raw shape of the `user` object as returned by the backend (camelCase, per
 // the rest of this codebase's REST envelope convention). `id` is normalized
 // to `uid` below to match the rest of the frontend's existing `User` type.
-interface RawUser {
+export interface RawUser {
   id: string
   email: string
   displayName?: string | null
   photoUrl?: string | null
+  isPlatformAdmin?: boolean
   isDemo?: boolean
   demoExpiresAt?: string | null
   createdAt: string
@@ -36,12 +37,13 @@ interface AuthResponse extends AuthTokens {
   user: RawUser
 }
 
-function normalizeUser(raw: RawUser): User {
+export function normalizeUser(raw: RawUser): User {
   return {
     uid: raw.id,
     email: raw.email,
     displayName: raw.displayName ?? '',
     photoUrl: raw.photoUrl ?? undefined,
+    isPlatformAdmin: raw.isPlatformAdmin ?? false,
     isDemo: raw.isDemo ?? false,
     demoExpiresAt: raw.demoExpiresAt ?? null,
     createdAt: raw.createdAt,
