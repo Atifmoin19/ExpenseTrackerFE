@@ -27,3 +27,8 @@ dev-dist
 .env
 .env.*
 
+
+# TypeScript build output (tsc -b)
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
