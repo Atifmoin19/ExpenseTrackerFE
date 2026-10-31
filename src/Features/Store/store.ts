@@ -1,6 +1,8 @@
 import persistReducer from 'redux-persist/es/persistReducer'
 import { persistStore, type PersistConfig } from 'redux-persist'
-import storageSession from 'redux-persist/lib/storage/session'
+// ESM build: Vite 8's dev server hands the CommonJS lib/ build back as a
+// namespace object, so storage.getItem was undefined in dev.
+import storageSession from 'redux-persist/es/storage/session'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { appReducer } from './appReducer.slice'
 import { userReducer } from './userSlice'
