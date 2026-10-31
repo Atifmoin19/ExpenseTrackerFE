@@ -39,11 +39,21 @@ export default defineConfig({
   ],
   build: {
     outDir: './build',
-    rollupOptions: {
+    rolldownOptions: {
       output: {
-        manualChunks: {
-          charts: ['recharts'],
-          vendor: ['react', 'react-dom', 'react-redux', 'react-router-dom', '@reduxjs/toolkit'],
+        // Vite 8 (Rolldown) dropped the object form of manualChunks; codeSplitting
+        // groups give the same split: charts and the core React vendor bundle.
+        codeSplitting: {
+          groups: [
+            // Higher priority wins: without it the charts group pulls in its shared
+            // dependencies (react, redux) and the entry ends up preloading recharts.
+            { name: 'charts', priority: 1, test: /[\\/]node_modules[\\/](recharts|d3-[^\\/]+|victory-vendor)[\\/]/ },
+            {
+              name: 'vendor',
+              priority: 2,
+              test: /[\\/]node_modules[\\/](react|react-dom|react-redux|react-router|react-router-dom|@reduxjs[\\/]toolkit|scheduler)[\\/]/,
+            },
+          ],
         },
       },
     },
