@@ -1,7 +1,7 @@
 import { extendTheme, type ThemeConfig } from '@chakra-ui/react'
 
 /**
- * Design system tokens for Expense Tracker.
+ * Design system tokens for All Square.
  *
  * Accent: deep teal (money + travel, distinct from the generic AI blue/purple).
  * Neutrals are tinted very slightly toward the accent hue rather than pure gray.

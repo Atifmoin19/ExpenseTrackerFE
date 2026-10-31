@@ -1,4 +1,4 @@
-# Expense Tracker (frontend)
+# All Square (frontend)
 
 Split group trip expenses with friends, see who owes whom, and settle up in as few payments as possible. Installable PWA that keeps working offline.
 

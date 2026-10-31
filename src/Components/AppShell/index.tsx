@@ -9,17 +9,18 @@ import { useAssetUrl } from 'Features/Hooks/useAssetUrl'
 import { NotificationBell } from 'Components/NotificationBell'
 import { OfflineBanner } from 'Components/OfflineBanner'
 import { DemoBanner } from 'Components/DemoBanner'
+import { APP_HOME, APP_NAME } from 'Constants/routes'
 
 function BrandMark() {
   return (
-    <HStack spacing={2} as={RouterLink} to="/" aria-label="Expense Tracker home">
+    <HStack spacing={2} as={RouterLink} to={APP_HOME} aria-label={`${APP_NAME} home`}>
       <Box w="30px" h="30px" borderRadius="8px" bg="primary.500" display="flex" alignItems="center" justifyContent="center">
         <Text color="white" fontWeight={800} fontSize="sm">
           $
         </Text>
       </Box>
       <Text fontWeight={800} fontSize="md" color="ink.900" display={{ base: 'none', sm: 'block' }}>
-        Expense Tracker
+        {APP_NAME}
       </Text>
     </HStack>
   )
@@ -54,7 +55,7 @@ function ProfileIcon({ active }: { active: boolean }) {
 }
 
 const MOBILE_NAV_ITEMS = [
-  { to: '/', label: 'Trips', icon: HomeIcon },
+  { to: APP_HOME, label: 'Trips', icon: HomeIcon },
   { to: '/profile', label: 'Profile', icon: ProfileIcon },
 ]
 
@@ -95,7 +96,7 @@ export function AppShell() {
           <BrandMark />
           <HStack as="nav" aria-label="Primary" spacing={1} display={{ base: 'none', md: 'flex' }}>
             {MOBILE_NAV_ITEMS.map((item) => {
-              const active = item.to === '/' ? location.pathname === '/' : location.pathname.startsWith(item.to)
+              const active = item.to === APP_HOME ? location.pathname === APP_HOME : location.pathname.startsWith(item.to)
               return (
                 <HStack
                   key={item.to}
@@ -163,7 +164,7 @@ export function AppShell() {
         zIndex="sticky"
       >
         {MOBILE_NAV_ITEMS.map((item) => {
-          const active = item.to === '/' ? location.pathname === '/' : location.pathname.startsWith(item.to)
+          const active = item.to === APP_HOME ? location.pathname === APP_HOME : location.pathname.startsWith(item.to)
           const Icon = item.icon
           return (
             <Flex

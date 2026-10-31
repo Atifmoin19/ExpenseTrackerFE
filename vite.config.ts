@@ -21,13 +21,13 @@ export default defineConfig({
         type: 'module',
       },
       manifest: {
-        name: 'Expense Tracker',
-        short_name: 'Expenses',
-        description: 'Split trip expenses with friends and settle up fast.',
+        name: 'All Square: split trip expenses',
+        short_name: 'All Square',
+        description: 'Split group trip expenses four ways, see who owes whom, and settle up. Works offline.',
         theme_color: '#0E7C74',
         background_color: '#F7F8F8',
         display: 'standalone',
-        start_url: '/',
+        start_url: '/app',
         scope: '/',
         icons: [
           { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },

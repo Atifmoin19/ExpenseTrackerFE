@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Text, VStack } from '@chakra-ui/react'
+import { Button, Text, VStack, type ButtonProps } from '@chakra-ui/react'
 import { startDemo } from 'Services/auth'
 import { useAppDispatch } from 'Features/Store/common'
 import { setDemo, setTokens } from 'Features/Store/authSlice'
@@ -12,7 +12,14 @@ export const DEMO_ENABLED = import.meta.env.VITE_DEMO_ENABLED === 'true'
 
 /** "Try the demo" — signs into a seeded, throwaway sandbox account. Renders
  *  nothing unless VITE_DEMO_ENABLED=true. */
-export function DemoButton() {
+interface DemoButtonProps {
+  /** Overrides for the button's look (the sign-in screen uses the outline default). */
+  buttonProps?: ButtonProps
+  /** Called after a successful sign-in (the landing page navigates into the app). */
+  onStarted?: () => void
+}
+
+export function DemoButton({ buttonProps, onStarted }: DemoButtonProps = {}) {
   const dispatch = useAppDispatch()
   const toast = useAppToast()
   const [isLoading, setIsLoading] = useState(false)
@@ -28,6 +35,7 @@ export function DemoButton() {
       dispatch(setDemo(true))
       dispatch(setUserProfile(user))
       dispatch(setLoggedIn(true))
+      onStarted?.()
     } catch (err) {
       toast.error('Could not start the demo', err)
     } finally {
@@ -37,7 +45,7 @@ export function DemoButton() {
 
   return (
     <VStack spacing={1} w="full">
-      <Button variant="outline" size="lg" w="full" isLoading={isLoading} onClick={handleClick}>
+      <Button variant="outline" size="lg" w="full" {...buttonProps} isLoading={isLoading} onClick={handleClick}>
         Try the demo
       </Button>
       {isSlow && (

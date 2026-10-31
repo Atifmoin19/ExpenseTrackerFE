@@ -23,6 +23,7 @@ import { useAppDispatch, useAppSelector } from 'Features/Store/common'
 import { setUserProfile } from 'Features/Store/userSlice'
 import { useAppToast } from 'Features/Hooks/useAppToast'
 import { useAssetUrl } from 'Features/Hooks/useAssetUrl'
+import { APP_HOME } from 'Constants/routes'
 
 function Onboarding() {
   const navigate = useNavigate()
@@ -71,13 +72,13 @@ function Onboarding() {
         try {
           const accepted = await acceptInvite(code).unwrap()
           toast.success('Welcome!', `You've joined ${accepted.data?.name ?? 'the trip'}.`)
-          navigate('/', { replace: true })
+          navigate(APP_HOME, { replace: true })
           return
         } catch (err) {
           toast.error("Couldn't join that trip automatically", err)
         }
       }
-      navigate('/', { replace: true })
+      navigate(APP_HOME, { replace: true })
     } catch (err) {
       toast.error('Could not save your profile', err)
     }

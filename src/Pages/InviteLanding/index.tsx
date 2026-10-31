@@ -9,6 +9,7 @@ import { useAcceptInviteMutation, useGetInvitePreviewQuery } from 'Services/Api/
 import { setPendingInviteCode } from 'Services/auth'
 import { useAppToast } from 'Features/Hooks/useAppToast'
 import { EmptyState } from 'Components/EmptyState'
+import { APP_HOME, APP_NAME } from 'Constants/routes'
 
 function InviteLanding() {
   const { code = '' } = useParams<{ code: string }>()
@@ -64,8 +65,8 @@ function InviteLanding() {
           icon={<FiAlertTriangle size={40} color="var(--chakra-colors-negative-500)" />}
           title="This invite link isn't valid"
           description="It may have expired or already reached its use limit. Ask the trip admin for a new link."
-          actionLabel="Go to Expense Tracker"
-          onAction={() => navigate('/')}
+          actionLabel={`Go to ${APP_NAME}`}
+          onAction={() => navigate(APP_HOME)}
         />
       </Box>
     )

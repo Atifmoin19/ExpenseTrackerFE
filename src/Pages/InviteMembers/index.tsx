@@ -26,6 +26,7 @@ import { useCreateInviteMutation } from 'Services/Api/invites.api'
 import { MemberChip } from 'Components/MemberAvatar'
 import { ConfirmDialog } from 'Components/ConfirmDialog'
 import { useAppToast } from 'Features/Hooks/useAppToast'
+import { APP_NAME } from 'Constants/routes'
 
 interface ContactPickerNavigator extends Navigator {
   contacts?: {
@@ -74,7 +75,7 @@ function InviteMembers() {
     if (!inviteLink) return
     if (navigator.share) {
       try {
-        await navigator.share({ title: `Join ${trip.name} on Expense Tracker`, url: inviteLink })
+        await navigator.share({ title: `Join ${trip.name} on ${APP_NAME}`, url: inviteLink })
       } catch {
         // user cancelled share sheet — no-op
       }

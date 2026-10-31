@@ -99,12 +99,12 @@ self.addEventListener('push', (event) => {
   try {
     payload = event.data ? (event.data.json() as PushPayload) : {}
   } catch {
-    payload = { title: 'Expense Tracker', body: event.data ? event.data.text() : '' }
+    payload = { title: 'All Square', body: event.data ? event.data.text() : '' }
   }
 
-  const title = payload.title || 'Expense Tracker'
+  const title = payload.title || 'All Square'
   const body = payload.body || ''
-  const targetUrl = payload.url || (payload.tripId ? `/trips/${payload.tripId}` : '/')
+  const targetUrl = payload.url || (payload.tripId ? `/trips/${payload.tripId}` : '/app')
 
   event.waitUntil(
     self.registration.showNotification(title, {
@@ -118,7 +118,7 @@ self.addEventListener('push', (event) => {
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close()
-  const targetUrl = (event.notification.data as { url?: string } | undefined)?.url || '/'
+  const targetUrl = (event.notification.data as { url?: string } | undefined)?.url || '/app'
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
       const existing = clientList.find((c) => c.url.includes(self.location.origin)) as WindowClient | undefined

@@ -1,6 +1,7 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react'
 import { Box, Button, Heading, Text, VStack } from '@chakra-ui/react'
 import { FiAlertTriangle } from 'react-icons/fi'
+import { APP_HOME } from 'Constants/routes'
 
 interface Props {
   children: ReactNode
@@ -41,7 +42,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   handleReload = () => {
     this.setState({ hasError: false, error: null })
-    window.location.assign('/')
+    window.location.assign(APP_HOME)
   }
 
   render() {
