@@ -4,6 +4,7 @@ import { useAppSelector } from 'Features/Store/common'
 import { consumePendingInviteCode } from 'Services/auth'
 import { useAcceptInviteMutation } from 'Services/Api/invites.api'
 import { useAppToast } from 'Features/Hooks/useAppToast'
+import { APP_HOME } from 'Constants/routes'
 
 /**
  * Covers the deep-link case where a user opened /invite/{code} while logged
@@ -29,7 +30,7 @@ export function useAcceptPendingInvite() {
       .unwrap()
       .then((result) => {
         toast.success('Welcome!', `You've joined ${result.data?.name ?? 'the trip'}.`)
-        navigate('/')
+        navigate(APP_HOME)
       })
       .catch((err) => toast.error("Couldn't join that trip automatically", err))
     // eslint-disable-next-line react-hooks/exhaustive-deps

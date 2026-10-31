@@ -7,11 +7,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 interface AuthState {
   accessToken: string | null
   refreshToken: string | null
+  // True for a "Try the demo" sandbox session (POST /auth/demo). Separate from
+  // setTokens so silent token refreshes don't touch it.
+  isDemo: boolean
 }
 
 const initialState: AuthState = {
   accessToken: null,
   refreshToken: null,
+  isDemo: false,
 }
 
 // ── Slice ─────────────────────────────────────────────────────────────────────
@@ -26,9 +30,13 @@ const authSlice = createSlice({
     clearTokens: (state) => {
       state.accessToken = null
       state.refreshToken = null
+      state.isDemo = false
+    },
+    setDemo: (state, action: PayloadAction<boolean>) => {
+      state.isDemo = action.payload
     },
   },
 })
 
-export const { setTokens, clearTokens } = authSlice.actions
+export const { setTokens, clearTokens, setDemo } = authSlice.actions
 export const authReducer = authSlice.reducer

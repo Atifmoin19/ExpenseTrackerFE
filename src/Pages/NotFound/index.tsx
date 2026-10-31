@@ -1,5 +1,6 @@
 import { Box, Button, Heading, Text } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
+import { APP_HOME } from 'Constants/routes'
 
 function NotFound() {
   const navigate = useNavigate()
@@ -24,7 +25,7 @@ function NotFound() {
       <Text mt={3} color="ink.500" maxW="md">
         The page you're looking for doesn't exist or has been moved.
       </Text>
-      <Button mt={8} colorScheme="primary" size="lg" onClick={() => navigate('/', { replace: true })}>
+      <Button mt={8} colorScheme="primary" size="lg" onClick={() => navigate(APP_HOME, { replace: true })}>
         Go home
       </Button>
     </Box>

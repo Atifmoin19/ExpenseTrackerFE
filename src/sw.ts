@@ -5,6 +5,7 @@ import { NetworkFirst, CacheFirst, NetworkOnly } from 'workbox-strategies'
 import { BackgroundSyncPlugin } from 'workbox-background-sync'
 import { ExpirationPlugin } from 'workbox-expiration'
 import type { PrecacheEntry } from 'workbox-precaching'
+import { OFFLINE_LOCAL_ID_HEADER } from './Services/offlineId'
 
 declare const self: ServiceWorkerGlobalScope & {
   __WB_MANIFEST: (PrecacheEntry | string)[]
@@ -53,7 +54,7 @@ const expenseSyncQueue = new BackgroundSyncPlugin('expense-sync-queue', {
     let entry
     while ((entry = await queue.shiftRequest())) {
       const { request } = entry
-      const localId = request.headers.get('X-Offline-Local-Id')
+      const localId = request.headers.get(OFFLINE_LOCAL_ID_HEADER)
       try {
         const response = await fetch(request.clone())
         if (!response.ok && response.status >= 500) throw new Error('Server error, will retry later')
@@ -98,12 +99,12 @@ self.addEventListener('push', (event) => {
   try {
     payload = event.data ? (event.data.json() as PushPayload) : {}
   } catch {
-    payload = { title: 'Expense Tracker', body: event.data ? event.data.text() : '' }
+    payload = { title: 'All Square', body: event.data ? event.data.text() : '' }
   }
 
-  const title = payload.title || 'Expense Tracker'
+  const title = payload.title || 'All Square'
   const body = payload.body || ''
-  const targetUrl = payload.url || (payload.tripId ? `/trips/${payload.tripId}` : '/')
+  const targetUrl = payload.url || (payload.tripId ? `/trips/${payload.tripId}` : '/app')
 
   event.waitUntil(
     self.registration.showNotification(title, {
@@ -117,7 +118,7 @@ self.addEventListener('push', (event) => {
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close()
-  const targetUrl = (event.notification.data as { url?: string } | undefined)?.url || '/'
+  const targetUrl = (event.notification.data as { url?: string } | undefined)?.url || '/app'
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
       const existing = clientList.find((c) => c.url.includes(self.location.origin)) as WindowClient | undefined

@@ -17,7 +17,7 @@ import { FiMail } from 'react-icons/fi'
 import { emailOtpSchema, type EmailOtpFormValues } from 'Features/Schema/auth.schema'
 import { requestOtp, verifyOtp, loginWithGoogle } from 'Services/auth'
 import { useAppDispatch } from 'Features/Store/common'
-import { setTokens } from 'Features/Store/authSlice'
+import { setDemo, setTokens } from 'Features/Store/authSlice'
 import { setUserProfile } from 'Features/Store/userSlice'
 import { setLoggedIn } from 'Features/Store/appReducer.slice'
 import { GoogleSignInButton } from 'Components/GoogleSignInButton'
@@ -50,6 +50,7 @@ export function AuthForm({ onAuthenticated, ctaCopy }: AuthFormProps) {
 
   const finishLogin = (tokens: AuthTokens, user: User) => {
     dispatch(setTokens(tokens))
+    dispatch(setDemo(false))
     dispatch(setUserProfile(user))
     dispatch(setLoggedIn(true))
     onAuthenticated?.()

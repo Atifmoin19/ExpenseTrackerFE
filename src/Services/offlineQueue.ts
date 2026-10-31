@@ -7,11 +7,9 @@ import { appApi } from 'Services/Api/app.api'
 import { store } from 'Features/Store/store'
 import type { AppDispatch } from 'Features/Store/store'
 
-export function generateLocalId(): string {
-  return typeof crypto !== 'undefined' && 'randomUUID' in crypto
-    ? crypto.randomUUID()
-    : `local-${Date.now()}-${Math.random().toString(36).slice(2)}`
-}
+import { generateLocalId, offlineIdHeaders } from 'Services/offlineId'
+
+export { generateLocalId }
 
 /**
  * Persists an expense to IndexedDB so it survives reloads and can be shown
@@ -39,9 +37,10 @@ export async function queueExpenseOffline(localId: string, tripId: string, body:
 
 /**
  * Foreground fallback/reconciliation: replays anything still pending once the
- * browser reports it's back online. Safe to call even if the service worker
- * already handled it — pending entries are removed the moment they succeed,
- * so there is no double-submit risk.
+ * browser reports it's back online. This can race the service worker's
+ * Background Sync replay of the same POST (both hold a copy), so the request
+ * may reach the server twice; that is safe because both carry the same
+ * X-Offline-Local-Id and the backend create is idempotent on it.
  */
 export async function replayPendingExpenses(dispatch: AppDispatch) {
   const pending = await getPendingExpenses()
@@ -51,7 +50,7 @@ export async function replayPendingExpenses(dispatch: AppDispatch) {
       await axios.post(BASE_URL + TRIP_EXPENSES(entry.tripId), entry.body, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          'X-Offline-Local-Id': entry.localId,
+          ...offlineIdHeaders(entry.localId),
         },
       })
       await removePendingExpense(entry.localId)

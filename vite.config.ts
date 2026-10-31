@@ -21,13 +21,13 @@ export default defineConfig({
         type: 'module',
       },
       manifest: {
-        name: 'Expense Tracker',
-        short_name: 'Expenses',
-        description: 'Split trip expenses with friends and settle up fast.',
+        name: 'All Square: split trip expenses',
+        short_name: 'All Square',
+        description: 'Split group trip expenses four ways, see who owes whom, and settle up. Works offline.',
         theme_color: '#0E7C74',
         background_color: '#F7F8F8',
         display: 'standalone',
-        start_url: '/',
+        start_url: '/app',
         scope: '/',
         icons: [
           { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
@@ -39,11 +39,21 @@ export default defineConfig({
   ],
   build: {
     outDir: './build',
-    rollupOptions: {
+    rolldownOptions: {
       output: {
-        manualChunks: {
-          charts: ['recharts'],
-          vendor: ['react', 'react-dom', 'react-redux', 'react-router-dom', '@reduxjs/toolkit'],
+        // Vite 8 (Rolldown) dropped the object form of manualChunks; codeSplitting
+        // groups give the same split: charts and the core React vendor bundle.
+        codeSplitting: {
+          groups: [
+            // Higher priority wins: without it the charts group pulls in its shared
+            // dependencies (react, redux) and the entry ends up preloading recharts.
+            { name: 'charts', priority: 1, test: /[\\/]node_modules[\\/](recharts|d3-[^\\/]+|victory-vendor)[\\/]/ },
+            {
+              name: 'vendor',
+              priority: 2,
+              test: /[\\/]node_modules[\\/](react|react-dom|react-redux|react-router|react-router-dom|@reduxjs[\\/]toolkit|scheduler)[\\/]/,
+            },
+          ],
         },
       },
     },

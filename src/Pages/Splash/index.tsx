@@ -1,5 +1,6 @@
 import { Box, Text, VStack } from '@chakra-ui/react'
 import { keyframes } from '@emotion/react'
+import { APP_NAME } from 'Constants/routes'
 
 const pulse = keyframes`
   0%, 100% { opacity: 1; transform: scale(1); }
@@ -21,7 +22,7 @@ function Splash() {
       bg="primary.500"
       role="status"
       aria-live="polite"
-      aria-label="Loading Expense Tracker"
+      aria-label={`Loading ${APP_NAME}`}
     >
       <VStack spacing={4}>
         <Box
@@ -40,7 +41,7 @@ function Splash() {
           </Text>
         </Box>
         <Text color="white" fontWeight={700} fontSize="lg" letterSpacing="0.01em">
-          Expense Tracker
+          {APP_NAME}
         </Text>
       </VStack>
     </Box>

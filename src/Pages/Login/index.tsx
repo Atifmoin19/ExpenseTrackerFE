@@ -1,5 +1,7 @@
 import { Box, Heading, Text, VStack } from '@chakra-ui/react'
 import { AuthForm } from 'Components/AuthForm'
+import { DemoButton } from 'Components/DemoButton'
+import { APP_NAME } from 'Constants/routes'
 
 function Logo() {
   return (
@@ -28,18 +30,18 @@ function Login() {
         justifyContent="space-between"
       >
         <Text fontWeight={800} fontSize="lg">
-          Expense Tracker
+          {APP_NAME}
         </Text>
         <VStack align="flex-start" spacing={4} maxW="sm">
           <Heading size="xl" fontFamily="heading" lineHeight={1.15}>
             Split trip costs without the group-chat math.
           </Heading>
           <Text color="whiteAlpha.800" fontSize="md">
-            Track who paid, who owes, and settle up in a couple of taps — built for group trips.
+            Track who paid, who owes, and settle up in a couple of taps. Built for group trips.
           </Text>
         </VStack>
         <Text fontSize="xs" color="whiteAlpha.600">
-          © {new Date().getFullYear()} Expense Tracker
+          © {new Date().getFullYear()} {APP_NAME}
         </Text>
       </Box>
 
@@ -63,6 +65,7 @@ function Login() {
           </VStack>
 
           <AuthForm />
+          <DemoButton />
         </VStack>
       </Box>
     </Box>

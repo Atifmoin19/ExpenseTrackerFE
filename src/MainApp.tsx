@@ -4,8 +4,10 @@ import { Box, Spinner } from '@chakra-ui/react'
 import { PrivateRoutes, PublicOnlyRoutes, RequireProfile, RequirePlatformAdmin } from 'RouteProtection'
 import { AppShell } from 'Components/AppShell'
 import { TripLayout } from 'Components/TripLayout'
+import { APP_HOME } from 'Constants/routes'
 
 const NotFound = lazy(() => import('Pages/NotFound'))
+const Landing = lazy(() => import('Pages/Landing'))
 const Login = lazy(() => import('Pages/Login'))
 const Onboarding = lazy(() => import('Pages/Onboarding'))
 const InviteLanding = lazy(() => import('Pages/InviteLanding'))
@@ -32,7 +34,10 @@ function LoadingFallback() {
 export const AppRouter = () => (
   <Suspense fallback={<LoadingFallback />}>
     <Routes>
-      {/* Public-only routes — logged-in users are redirected to "/" */}
+      {/* Public landing page. Signed-in visitors see it too, with an "Open app" button. */}
+      <Route path="/" element={<Landing />} />
+
+      {/* Public-only routes: logged-in users are redirected to the app home */}
       <Route element={<PublicOnlyRoutes />}>
         <Route path="/login" element={<Login />} />
       </Route>
@@ -47,7 +52,7 @@ export const AppRouter = () => (
         {/* Everything else additionally requires a completed profile */}
         <Route element={<RequireProfile />}>
           <Route element={<AppShell />}>
-            <Route path="/" element={<Home />} />
+            <Route path={APP_HOME} element={<Home />} />
             <Route path="/trips/new" element={<CreateTrip />} />
             <Route path="/profile" element={<Profile />} />
 
